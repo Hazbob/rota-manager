@@ -1,0 +1,6 @@
+@rota_manager_HostAddress = http://localhost:5090
+
+GET {{rota_manager_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
