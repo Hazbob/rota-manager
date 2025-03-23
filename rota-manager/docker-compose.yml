@@ -1,17 +1,10 @@
-﻿version: '3.8'  # Specify the version of Docker Compose
-
-services:
-  postgres:
-    image: postgres:14.1-alpine  # Use the official PostgreSQL image
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+﻿services:
+  db:
+    image: postgres:latest
     ports:
-      - '5432:5432'  # Map the PostgreSQL port to the host
+      - "5432:5432"
+    restart: always
     volumes:
-      - postgres_data:/var/lib/postgresql/data  # Persist PostgreSQL data
-
-volumes:
-  postgres_data:
-    driver: local
+      - ./data:/docker-entrypoint-initdb.d
+    environment:
+      
