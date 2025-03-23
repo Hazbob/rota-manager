@@ -1,1 +1,1 @@
-CREATE DATABASE 'rota_manager'
+CREATE DATABASE "rota_manager"

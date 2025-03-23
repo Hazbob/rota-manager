@@ -1,8 +1,11 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace rota_manager.models;
 
 public class RotaEntry
 {
-    public int RotaId { get; set; }
+    [Key]
+    public int RotaEntryId { get; set; }
     public string EmployeeId { get; set; } 
     public DateTime StartTime { get; set; }
     public int DayOfYear { get; set; }

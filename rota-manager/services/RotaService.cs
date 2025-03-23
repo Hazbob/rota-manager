@@ -13,6 +13,9 @@ public class RotaService
 
     public async Task<IReadOnlyList<Rota>> GetAllRotasForGroup()
     {
-        _rotaRepository.GetAllRotasForGroup()
+        var listTest = new List<Rota>();
+        var newItem = await _rotaRepository.testc();
+        listTest.Add(newItem);
+        return listTest;
     }
 }

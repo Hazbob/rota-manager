@@ -1,3 +1,8 @@
+using Microsoft.EntityFrameworkCore;
+using rota_manager.Data;
+using rota_manager.Errors;
+using System.Diagnostics;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -5,7 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
-builder.Services.AddDbContext<>()
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new NoDbConnectionStringException();
+builder.Services.AddDbContext<RotaManagerContext>(options => options.UseNpgsql(connectionString));
 
 var app = builder.Build();
 app.MapControllers();
