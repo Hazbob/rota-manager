@@ -12,7 +12,7 @@ using rota_manager.Data;
 namespace rota_manager.Migrations
 {
     [DbContext(typeof(RotaManagerContext))]
-    [Migration("20250323195133_InitialCreate")]
+    [Migration("20250326185723_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -27,18 +27,28 @@ namespace rota_manager.Migrations
 
             modelBuilder.Entity("rota_manager.models.Employee", b =>
                 {
-                    b.Property<int>("InternalEmployeeId")
+                    b.Property<int>("EmployeeId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("InternalEmployeeId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("EmployeeId"));
 
-                    b.Property<string>("Id")
+                    b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("InternalEmployeeId");
+                    b.Property<int?>("GroupId")
+                        .HasColumnType("integer");
 
-                    b.ToTable("Employee");
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("EmployeeId");
+
+                    b.HasIndex("GroupId");
+
+                    b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("rota_manager.models.Group", b =>
@@ -90,12 +100,11 @@ namespace rota_manager.Migrations
                     b.Property<int>("DayOfYear")
                         .HasColumnType("integer");
 
-                    b.Property<string>("EmployeeId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int?>("EmployeeInternalEmployeeId")
+                    b.Property<int>("EmployeeId")
                         .HasColumnType("integer");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("ParentRotaRotaId")
                         .HasColumnType("integer");
@@ -105,7 +114,7 @@ namespace rota_manager.Migrations
 
                     b.HasKey("RotaEntryId");
 
-                    b.HasIndex("EmployeeInternalEmployeeId");
+                    b.HasIndex("EmployeeId");
 
                     b.HasIndex("ParentRotaRotaId");
 
@@ -138,6 +147,13 @@ namespace rota_manager.Migrations
                     b.ToTable("RotaHistories");
                 });
 
+            modelBuilder.Entity("rota_manager.models.Employee", b =>
+                {
+                    b.HasOne("rota_manager.models.Group", null)
+                        .WithMany("Employees")
+                        .HasForeignKey("GroupId");
+                });
+
             modelBuilder.Entity("rota_manager.models.Rota", b =>
                 {
                     b.HasOne("rota_manager.models.Group", null)
@@ -151,7 +167,9 @@ namespace rota_manager.Migrations
                 {
                     b.HasOne("rota_manager.models.Employee", null)
                         .WithMany("RotaEntries")
-                        .HasForeignKey("EmployeeInternalEmployeeId");
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("rota_manager.models.Rota", "ParentRota")
                         .WithMany("RotaEntries")
@@ -169,6 +187,8 @@ namespace rota_manager.Migrations
 
             modelBuilder.Entity("rota_manager.models.Group", b =>
                 {
+                    b.Navigation("Employees");
+
                     b.Navigation("Rotas");
                 });
 

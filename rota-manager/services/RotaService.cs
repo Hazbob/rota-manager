@@ -1,4 +1,5 @@
 using rota_manager.models;
+using rota_manager.models.Request;
 using rota_manager.repositories;
 
 namespace rota_manager.services;
@@ -11,11 +12,19 @@ public class RotaService
         _rotaRepository = rotaRepository;
     }
 
-    public async Task<IReadOnlyList<Rota>> GetAllRotasForGroup()
+    public async Task<Rota>GetRotaByIdAsync(int rotaId)
     {
-        var listTest = new List<Rota>();
-        var newItem = await _rotaRepository.testc();
-        listTest.Add(newItem);
-        return listTest;
+      return await _rotaRepository.GetByIdAsync(rotaId);
+    }
+
+    public async Task<Rota> CreateRotaAsync(RotaResponse rotaBody)
+    {
+        var newRota = new Rota
+        {
+            GroupId = rotaBody.GroupId,
+            RotaEntries = rotaBody.RotaEntries,
+            WeekOfYear = rotaBody.WeekOfYear,
+        }; 
+        return await _rotaRepository.CreateAsync(newRota);
     }
 }

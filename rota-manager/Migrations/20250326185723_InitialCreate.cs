@@ -13,19 +13,6 @@ namespace rota_manager.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Employee",
-                columns: table => new
-                {
-                    InternalEmployeeId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Id = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Employee", x => x.InternalEmployeeId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Groups",
                 columns: table => new
                 {
@@ -55,6 +42,26 @@ namespace rota_manager.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Employees",
+                columns: table => new
+                {
+                    EmployeeId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    FirstName = table.Column<string>(type: "text", nullable: false),
+                    LastName = table.Column<string>(type: "text", nullable: false),
+                    GroupId = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Employees", x => x.EmployeeId);
+                    table.ForeignKey(
+                        name: "FK_Employees_Groups_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "Groups",
+                        principalColumn: "GroupId");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Rotas",
                 columns: table => new
                 {
@@ -80,20 +87,21 @@ namespace rota_manager.Migrations
                 {
                     RotaEntryId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    EmployeeId = table.Column<string>(type: "text", nullable: false),
+                    EmployeeId = table.Column<int>(type: "integer", nullable: false),
                     StartTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     DayOfYear = table.Column<int>(type: "integer", nullable: false),
-                    ParentRotaRotaId = table.Column<int>(type: "integer", nullable: false),
-                    EmployeeInternalEmployeeId = table.Column<int>(type: "integer", nullable: true)
+                    EndTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ParentRotaRotaId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RotaEntries", x => x.RotaEntryId);
                     table.ForeignKey(
-                        name: "FK_RotaEntries_Employee_EmployeeInternalEmployeeId",
-                        column: x => x.EmployeeInternalEmployeeId,
-                        principalTable: "Employee",
-                        principalColumn: "InternalEmployeeId");
+                        name: "FK_RotaEntries_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Employees",
+                        principalColumn: "EmployeeId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_RotaEntries_Rotas_ParentRotaRotaId",
                         column: x => x.ParentRotaRotaId,
@@ -103,9 +111,14 @@ namespace rota_manager.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_RotaEntries_EmployeeInternalEmployeeId",
+                name: "IX_Employees_GroupId",
+                table: "Employees",
+                column: "GroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RotaEntries_EmployeeId",
                 table: "RotaEntries",
-                column: "EmployeeInternalEmployeeId");
+                column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RotaEntries_ParentRotaRotaId",
@@ -128,7 +141,7 @@ namespace rota_manager.Migrations
                 name: "RotaHistories");
 
             migrationBuilder.DropTable(
-                name: "Employee");
+                name: "Employees");
 
             migrationBuilder.DropTable(
                 name: "Rotas");

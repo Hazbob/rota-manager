@@ -1,7 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace rota_manager.models;
 
+[Table("RotaHistories")]
 public class RotaHistory
 {
     [Key]

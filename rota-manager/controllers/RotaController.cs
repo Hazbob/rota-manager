@@ -1,17 +1,31 @@
 using Microsoft.AspNetCore.Mvc;
+using rota_manager.models.Request;
+using rota_manager.services;
 
 namespace rota_manager.controllers;
 
 public class RotaController : Controller
 {
-    public RotaController()
+  private readonly RotaService _rotaService;
+
+    public RotaController(RotaService rotaService)
     {
-        
+      _rotaService = rotaService;
     }
     
-    [HttpGet("[controller]/{groupId:int}")]
-    public async Task<IActionResult> GetAllRotas([FromRoute]int groupId)
+    [HttpGet("[controller]/{rotaId:int}")]
+    public async Task<IActionResult> GetRotaById([FromRoute]int rotaId)
     {
-        return Ok("helo");
+      var rota = await _rotaService.GetRotaByIdAsync(rotaId);
+
+      return Ok(rota);
+    }
+
+    [HttpPost("[controller]")]
+    public async Task<IActionResult> CreateRota(RotaResponse rota)
+    {
+      var newRota = await _rotaService.CreateRotaAsync(rota);
+      return Ok(newRota);
     }
 }
+
