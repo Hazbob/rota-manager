@@ -24,8 +24,8 @@ public class RotaController : Controller
     [HttpPost("[controller]")]
     public async Task<IActionResult> CreateRota(RotaResponse rota)
     {
-      var newRota = await _rotaService.CreateRotaAsync(rota);
-      return Ok(newRota);
+      await _rotaService.CreateRotaAsync(rota);
+      return Created();
     }
 }
 

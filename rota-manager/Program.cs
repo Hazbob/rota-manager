@@ -20,8 +20,8 @@ builder.Services.AddScoped<RotaRepository>();
 builder.Services.AddTransient<RotaManagerContext>();
 builder.Services.AddScoped<EmployeeService>();
 builder.Services.AddScoped<EmployeeRepository>();
-
-
+builder.Services.AddScoped<GroupRepository>();
+builder.Services.AddScoped<GroupService>();
 
 #endregion
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new NoDbConnectionStringException();

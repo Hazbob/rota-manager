@@ -15,7 +15,7 @@ public class EmployeeController : Controller
     [HttpPost("[controller]")]
     public async Task<IActionResult> CreateEmployee([FromBody]EmployeeRequest employeeBody)
     {
-        var newEmployee = await _employeeService.CreateEmployee(employeeBody);
-        return Ok(newEmployee);
+        await _employeeService.CreateEmployee(employeeBody);
+        return Created();
     }
 }

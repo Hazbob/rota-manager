@@ -17,17 +17,8 @@ public class RotaEntryController : Controller
     [HttpPost("[controller]")]
     public async Task<IActionResult> CreateRotaEntry(RotaEntryRequest rotaEntryBody)
     {
-        var newEntry = await _rotaEntryService.CreateRotaEntryAsync(rotaEntryBody);
-        
-        var result = new RotaEntryResponse
-        {
-            DayOfYear = newEntry.DayOfYear,
-            EmployeeId = newEntry.EmployeeId,
-            EndTime = newEntry.EndTime,
-            StartTime = newEntry.StartTime,
-            ParentRota = newEntry.ParentRota
-        };
-        return Ok(result);
+        await _rotaEntryService.CreateRotaEntryAsync(rotaEntryBody);
+        return Created();
     }
     
 }

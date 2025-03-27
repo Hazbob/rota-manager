@@ -9,6 +9,6 @@ public class Group
     [Key]
     public int GroupId { get; set; }
     public required string GroupName { get; set; }
-    public ICollection<Rota>? Rotas { get; }
+    public ICollection<Rota> Rotas { get; }
     public ICollection<Employee> Employees { get; }
 }
